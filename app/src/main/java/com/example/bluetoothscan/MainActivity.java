@@ -14,7 +14,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
@@ -38,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     private LoadingDialog loadingDialog;
     private Handler mLoadingHandler;
     private boolean allDevicesDiscovered = false;
+    ImageButton back;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +53,13 @@ public class MainActivity extends AppCompatActivity {
         loadingDialog.setTitle("Custom Loading");
         loadingDialog.setMessage("Please Wait...");
         mLoadingHandler = new Handler();
+        back=findViewById(R.id.btnBack);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
         // Check if Bluetooth LE is supported on the device
         if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
             Toast.makeText(this, "Bluetooth LE is not supported on this device", Toast.LENGTH_SHORT).show();
