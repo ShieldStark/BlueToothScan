@@ -38,7 +38,6 @@ public class MainActivity extends AppCompatActivity {
     private LoadingDialog loadingDialog;
     private Handler mLoadingHandler;
     private boolean allDevicesDiscovered = false;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,20 +46,16 @@ public class MainActivity extends AppCompatActivity {
         deviceListView = findViewById(R.id.deviceListView);
         arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, deviceList);
         deviceListView.setAdapter(arrayAdapter);
-
         loadingDialog = new LoadingDialog(this);
         loadingDialog.setTitle("Custom Loading");
         loadingDialog.setMessage("Please Wait...");
-
         mLoadingHandler = new Handler();
-
         // Check if Bluetooth LE is supported on the device
         if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
             Toast.makeText(this, "Bluetooth LE is not supported on this device", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
-
         // Check if Bluetooth permissions are granted
         checkBluetoothPermissions();
     }
@@ -122,7 +117,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-
     private void startBleScan() {
         if (bluetoothLeScanner != null) {
             runOnUiThread(new Runnable() {
@@ -187,13 +181,11 @@ public class MainActivity extends AppCompatActivity {
             }
             //checkAllDevicesDiscovered();
         }
-
         @Override
         public void onScanFailed(int errorCode) {
             super.onScanFailed(errorCode);
             // Handle scan failure
         }
-
         @Override
         public void onBatchScanResults(List<ScanResult> results) {
             super.onBatchScanResults(results);
@@ -209,7 +201,6 @@ public class MainActivity extends AppCompatActivity {
             loadingDialog.dismiss();
         }
     }
-
     void showProgressBar() {
         loadingDialog.show();
     }

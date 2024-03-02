@@ -5,9 +5,19 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+        <include layout="@layout/custom_action_bar_layout" />
+
+    </com.google.android.material.appbar.AppBarLayout>
     <ListView
         android:id="@+id/deviceListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/appBarLayout"
         android:padding="16dp"/>
+
 </RelativeLayout>
