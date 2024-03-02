@@ -23,6 +23,7 @@ public class LoginActivity extends AppCompatActivity {
         ImageButton back=findViewById(R.id.btnBack);
         final EditText passwordEditText = findViewById(R.id.editTextPassword);
         back.setVisibility(View.INVISIBLE);
+        passwordEditText.setTextIsSelectable(false);
         CheckBox showPasswordCheckBox = findViewById(R.id.showPasswordCheckBox);
 
         showPasswordCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
