@@ -5,6 +5,9 @@ public class DataValue {
     String dataType;
     String serialNumber;
 
+    public DataValue() {
+    }
+
     public String getTime() {
         return time;
     }

@@ -107,10 +107,16 @@ public class DeviceInfoActivity extends AppCompatActivity {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            try (FileOutputStream fos = openFileOutput("saved_data.txt", MODE_PRIVATE)) {
+            try (FileOutputStream fos = openFileOutput("saved_data.txt",Context.MODE_APPEND| Context.MODE_PRIVATE)) {
+                Log.d(TAG, "saveDataToFile TRY Called");
                 fos.write(serializedData.getBytes());
+                fos.write("\n".getBytes());
+                fos.close();
+                //Toast.makeText(DeviceInfoActivity.this, "Data saved to file", Toast.LENGTH_SHORT).show();
             } catch (IOException e) {
+                Log.d(TAG, "SaveDataToFile exception Called" + e.getMessage());
                 e.printStackTrace();
+                //Toast.makeText(DeviceInfoActivity.this, "Error saving data", Toast.LENGTH_SHORT).show();
             }
             return null;
         }
