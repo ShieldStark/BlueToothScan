@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         connect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent=new Intent(MainActivity.this,InfoActivity.class);
+                Intent intent=new Intent(MainActivity.this,DeviceInfoActivity.class);
                 startActivity(intent);
             }
         });
@@ -79,7 +79,6 @@ public class MainActivity extends AppCompatActivity {
         // Check if Bluetooth permissions are granted
         checkBluetoothPermissions();
     }
-
     private void checkBluetoothPermissions() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT)
@@ -100,7 +99,6 @@ public class MainActivity extends AppCompatActivity {
             initializeBluetooth();
         }
     }
-
     private void initializeBluetooth() {
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (bluetoothAdapter == null) {
@@ -117,7 +115,6 @@ public class MainActivity extends AppCompatActivity {
         // Start BLE scanning
         startBleScan();
     }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -181,13 +178,11 @@ public class MainActivity extends AppCompatActivity {
             loadingDialog.dismiss();
         }
     }
-
     private void stopBleScan() {
         if (bluetoothLeScanner != null) {
             bluetoothLeScanner.stopScan(scanCallback);
         }
     }
-
     private final ScanCallback scanCallback = new ScanCallback() {
         @Override
         public void onScanResult(int callbackType, @NonNull ScanResult result) {

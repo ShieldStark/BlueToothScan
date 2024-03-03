@@ -6,17 +6,12 @@
     android:layout_height="match_parent"
     tools:context=".DeviceInfoActivity">
 
-    <com.google.android.material.appbar.AppBarLayout
+    <include
         android:id="@+id/appBarLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay"
+        layout="@layout/custom_action_bar_layout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <include layout="@layout/custom_action_bar_layout" />
-    </com.google.android.material.appbar.AppBarLayout>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TableLayout
         android:id="@+id/tableLayout2"
@@ -33,18 +28,18 @@
             <TextView
                 android:id="@+id/serialNumberTitle"
                 android:layout_width="0dp"
-                android:background="@drawable/common_border"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:background="@drawable/common_border"
                 android:text="Serial Number:"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/serialNumberData"
                 android:layout_width="0dp"
-                android:background="@drawable/common_border"
                 android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:background="@drawable/common_border" />
         </TableRow>
 
         <TableRow
@@ -63,19 +58,45 @@
             <TextView
                 android:id="@+id/timeData"
                 android:layout_width="0dp"
-                android:background="@drawable/common_border"
                 android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:background="@drawable/common_border" />
         </TableRow>
     </TableLayout>
 
-    <Button
-        android:id="@+id/save"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Save"
+        android:layout_margin="5dp"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/tableLayout2"
-        app:layout_constraintStart_toStartOf="@+id/tableLayout2" />
+        app:layout_constraintStart_toStartOf="@+id/tableLayout2">
 
+        <Button
+            android:id="@+id/save"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:text="Save" />
+
+        <Button
+            android:id="@+id/restore"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:text="Restore" />
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/appBarLayout"
+        app:layout_constraintTop_toTopOf="@+id/appBarLayout" />
 </androidx.constraintlayout.widget.ConstraintLayout>

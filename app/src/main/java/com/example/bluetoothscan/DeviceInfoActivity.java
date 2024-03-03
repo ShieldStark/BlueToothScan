@@ -3,9 +3,13 @@ package com.example.bluetoothscan;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,10 +22,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class DeviceInfoActivity extends AppCompatActivity {
+    String TAG="!@#DeviceInfoActivity";
     TextView serialNumber;
     TextView time;
-    Button save;
-
+    Button save,restore;
+    ProgressBar progressBar;
+    String serializedData;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,25 +35,39 @@ public class DeviceInfoActivity extends AppCompatActivity {
         serialNumber=findViewById(R.id.serialNumberData);
         time=findViewById(R.id.timeData);
         save=findViewById(R.id.save);
+        restore=findViewById(R.id.restore);
+        progressBar=findViewById(R.id.progressBar);
         serialNumber.setText("123");
         time.setText(getCurrentTime());
         String data="Hello Guys";
+
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.d(TAG,"onClick Called");
                 JSONObject jsonObject = new JSONObject();
                 try {
-                    jsonObject.put("serialNumber", serialNumber);
+                    Log.d(TAG,"TRY Called");
+                    jsonObject.put("serialNumber", "123");
                     jsonObject.put("data", data);
                     jsonObject.put("time", getCurrentTime());
                 } catch (JSONException e) {
+                    Log.d(TAG,"Exception Called"+e.getMessage());
                     e.printStackTrace();
                 }
                 // Serialize data object
-                String serializedData = jsonObject.toString();
+                serializedData = jsonObject.toString();
+                Log.d(TAG,"onClick Called: "+serializedData);
                 // Write serialized data to file
-                saveDataToFile(serializedData);
-
+                //saveDataToFile(serializedData);
+                new SaveDataTask().execute();
+            }
+        });
+        restore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(DeviceInfoActivity.this,InfoActivity.class);
+                startActivity(intent);
             }
         });
     }
@@ -58,11 +78,13 @@ public class DeviceInfoActivity extends AppCompatActivity {
 
     private void saveDataToFile(String data) {
         try {
+            Log.d(TAG,"saveDataToFile TRY Called");
             FileOutputStream fos = openFileOutput("data.txt", Context.MODE_PRIVATE);
             fos.write(data.getBytes());
             fos.close();
             Toast.makeText(this, "Data saved to file", Toast.LENGTH_SHORT).show();
         } catch (IOException e) {
+            Log.d(TAG,"SaveDataToFile exception Called"+e.getMessage());
             e.printStackTrace();
             Toast.makeText(this, "Error saving data", Toast.LENGTH_SHORT).show();
         }
@@ -72,4 +94,30 @@ public class DeviceInfoActivity extends AppCompatActivity {
         // Implement data fetching logic from device or server
         return "Sample data from device or server";
     }
+    private class SaveDataTask extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected void onPreExecute() {
+            progressBar.setVisibility(View.VISIBLE);
+        }
+        @Override
+        protected Void doInBackground(Void... params) {
+            // Simulate a time delay (in milliseconds) during saving
+            try {
+                Thread.sleep(2000); // 2 seconds delay
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            try (FileOutputStream fos = openFileOutput("saved_data.txt", MODE_PRIVATE)) {
+                fos.write(serializedData.getBytes());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(Void result) {
+            progressBar.setVisibility(View.GONE);
+        }
+    }
+
 }
