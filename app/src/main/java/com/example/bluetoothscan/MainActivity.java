@@ -16,6 +16,7 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -41,12 +42,21 @@ public class MainActivity extends AppCompatActivity {
     private Handler mLoadingHandler;
     private boolean allDevicesDiscovered = false;
     ImageButton back;
+    Button connect;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         deviceListView = findViewById(R.id.deviceListView);
+        connect=findViewById(R.id.connect);
+        connect.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(MainActivity.this,InfoActivity.class);
+                startActivity(intent);
+            }
+        });
         arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, deviceList);
         deviceListView.setAdapter(arrayAdapter);
         loadingDialog = new LoadingDialog(this);
@@ -141,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
                 public void run() {
                     stopBleScanAndShowNoDeviceFound();
                 }
-            },30000);
+            },3000);
         }
     }
     private void stopBleScanAndShowNoDeviceFound() {

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<TableLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tableLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <TableRow>
+        <CheckBox
+            android:id="@+id/selectCheckBox"
+            android:background="@drawable/common_border"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+        <TextView
+            android:id="@+id/time"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:background="@drawable/common_border"
+            android:text="Time"
+            android:textSize="12sp" />
+        <TextView
+            android:id="@+id/dataType"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:background="@drawable/common_border"
+            android:text="Data Type"
+            android:textSize="12sp" />
+        <TextView
+            android:id="@+id/serialNumber"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:background="@drawable/common_border"
+            android:text="Serial Number"
+            android:textSize="12sp" />
+    </TableRow>
+</TableLayout>
