@@ -3,6 +3,7 @@ package com.example.bluetoothscan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
@@ -39,11 +40,12 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.MyViewHolder> 
     public int getItemCount() {
         return list.size();
     }
-    public class MyViewHolder extends RecyclerView.ViewHolder{
+    public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         CheckBox checkBox;
         TextView time;
         TextView dataType;
         TextView serialNumber;
+        AdapterView.OnItemClickListener listener;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -51,6 +53,11 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.MyViewHolder> 
             time=itemView.findViewById(R.id.time);
             dataType=itemView.findViewById(R.id.dataType);
             serialNumber=itemView.findViewById(R.id.serialNumber);
+        }
+
+        @Override
+        public void onClick(View view) {
+
         }
     }
 }

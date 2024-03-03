@@ -1,9 +1,18 @@
 package com.example.bluetoothscan;
 
 public class DataValue {
+    boolean isSelected;
     String time;
     String dataType;
     String serialNumber;
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
+    }
 
     public DataValue() {
     }
