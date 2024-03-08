@@ -19,3 +19,54 @@
         android:valueTo="1.5"
         android:valueType="floatType" />
 </set>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.widget.ProgressBar;
+
+public class MainActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        // Get the ProgressBar reference
+        ProgressBar progressBar = findViewById(R.id.progressBar);
+
+        // Create rotation animation
+        ObjectAnimator rotateAnimator = ObjectAnimator.ofFloat(progressBar, "rotation", 0f, 360f);
+        rotateAnimator.setDuration(1000); // Duration in milliseconds
+
+        // Create scale animation
+        ObjectAnimator scaleXAnimator = ObjectAnimator.ofFloat(progressBar, "scaleX", 1f, 1.5f);
+        scaleXAnimator.setDuration(1000); // Duration in milliseconds
+        ObjectAnimator scaleYAnimator = ObjectAnimator.ofFloat(progressBar, "scaleY", 1f, 1.5f);
+        scaleYAnimator.setDuration(1000); // Duration in milliseconds
+
+        // Combine animations into an AnimatorSet
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.playTogether(rotateAnimator, scaleXAnimator, scaleYAnimator);
+
+        // Start the animation
+        animatorSet.start();
+    }
+}
