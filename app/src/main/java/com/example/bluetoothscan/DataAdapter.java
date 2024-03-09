@@ -35,6 +35,14 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.MyViewHolder> 
         holder.dataType.setText(list.get(position).getDataType());
         holder.serialNumber.setText(list.get(position).getSerialNumber());
     }
+    public void clear() {
+        list.clear();
+        notifyDataSetChanged();
+    }
+    public void addAll(List<DataValue> items) {
+        list.addAll(items);
+        notifyDataSetChanged();
+    }
 
     @Override
     public int getItemCount() {

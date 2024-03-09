@@ -1,0 +1,28 @@
+<set xmlns:android="http://schemas.android.com/apk/res/android">
+    <scale
+        android:fromXScale="1.0"
+        android:toXScale="1.5"
+        android:fromYScale="1.0"
+        android:toYScale="1.5"
+        android:pivotX="50%"
+        android:pivotY="50%"
+        android:duration="500"
+        android:repeatCount="infinite"
+        android:repeatMode="reverse">
+        <shape
+            android:shape="oval">
+            <solid android:color="#9e9e9e" />
+        </shape>
+    </scale>
+    <rotate
+        android:drawable="@drawable/rotate_xml"
+        android:interpolator="@android:anim/linear_interpolator"
+        android:pivotX="50%"
+        android:pivotY="50%"
+        android:fromDegrees="0"
+        android:toDegrees="360"
+        android:duration="1000"
+        android:repeatCount="infinite"
+        android:repeatMode="restart"
+        />
+</set>

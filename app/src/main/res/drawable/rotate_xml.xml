@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?><!--<layer-list>-->
+<rotate xmlns:android="http://schemas.android.com/apk/res/android"
+    android:fromDegrees="0"
+    android:toDegrees="360">
+    <layer-list>
+        <item>
+            <rotate xmlns:android="http://schemas.android.com/apk/res/android"
+                android:fromDegrees="-90"
+                android:toDegrees="-90">
+                <shape
+                    android:innerRadiusRatio="2.5"
+                    android:shape="ring"
+                    android:thickness="4dp"
+                    android:useLevel="true"><!-- this line fixes the issue for lollipop api 21 -->
+
+                    <gradient
+                        android:angle="0"
+                        android:endColor="#FFF"
+                        android:startColor="#FFF"
+                        android:type="sweep"
+                        android:useLevel="false" />
+                </shape>
+            </rotate>
+        </item>
+        <item>
+            <rotate xmlns:android="http://schemas.android.com/apk/res/android"
+                android:fromDegrees="0"
+                android:toDegrees="270">
+                <shape
+                    android:innerRadiusRatio="2.5"
+                    android:shape="ring"
+                    android:thickness="4dp"
+                    android:useLevel="true"><!-- this line fixes the issue for lollipop api 21 -->
+                    <gradient
+                        android:angle="0"
+                        android:centerColor="#9e9e9e"
+                        android:endColor="#9e9e9e"
+                        android:startColor="#9e9e9e"
+                        android:useLevel="false" />
+                </shape>
+            </rotate>
+        </item>
+    </layer-list>
+</rotate>
+
+
+
+
+
+
+
+<!--<scale xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    android:fromXScale="1.0"-->
+<!--    android:toXScale="1.5"-->
+<!--    android:fromYScale="1.0"-->
+<!--    android:toYScale="1.5"-->
+<!--    android:pivotX="50%"-->
+<!--    android:pivotY="50%"-->
+<!--    android:duration="1000"-->
+<!--    android:repeatCount="infinite"-->
+<!--    android:repeatMode="reverse">-->
+
+<!--    <rotate-->
+<!--        android:fromDegrees="0"-->
+<!--        android:toDegrees="360"-->
+<!--        android:pivotX="50%"-->
+<!--        android:pivotY="50%"-->
+<!--        android:duration="1000"-->
+<!--        android:interpolator="@android:anim/linear_interpolator">-->
+
+<!--        <bitmap-->
+<!--            android:src="@drawable/broken_circle"-->
+<!--            android:gravity="center" />-->
+<!--    </rotate>-->
+<!--</scale>-->
+
+
+
+
+<!--    &lt;!&ndash;<?xml version="1.0" encoding="utf-8"?>&ndash;&gt;-->
+
+

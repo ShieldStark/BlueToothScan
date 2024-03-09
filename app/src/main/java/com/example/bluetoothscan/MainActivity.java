@@ -8,8 +8,9 @@ import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanResult;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.net.wifi.WifiManager;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -19,11 +20,14 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+
+import com.example.bluetoothscan.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,20 +40,31 @@ public class MainActivity extends AppCompatActivity {
     private BluetoothAdapter bluetoothAdapter;
     private BluetoothLeScanner bluetoothLeScanner;
     private ArrayList<String> deviceList = new ArrayList<>();
-    private ArrayAdapter<String> arrayAdapter;
-    private ListView deviceListView;
+    private ArrayList<String> wifiDeviceList=new ArrayList<>();
     private LoadingDialog loadingDialog;
     private Handler mLoadingHandler;
-    private boolean allDevicesDiscovered = false;
+    private ArrayAdapter<String> arrayAdapter;
+    private ArrayAdapter<String> arrayAdapter1;
+    private ListView deviceListView;
+    private ProgressBar progressBar;
     ImageButton back;
     Button connect;
+    WifiManager wifiManager;
+    ListView wifiListView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         deviceListView = findViewById(R.id.deviceListView);
+        wifiListView=findViewById(R.id.wifiDeviceList);
         connect=findViewById(R.id.connect);
+        progressBar=findViewById(R.id.progressBar);
+        loadingDialog = new LoadingDialog(this);
+        loadingDialog.setTitle("Custom Loading");
+        loadingDialog.setMessage("Please Wait...");
+        mLoadingHandler = new Handler();
         connect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -58,11 +73,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, deviceList);
+        arrayAdapter1=new ArrayAdapter<>(this,android.R.layout.simple_list_item_1, wifiDeviceList);
         deviceListView.setAdapter(arrayAdapter);
-        loadingDialog = new LoadingDialog(this);
-        loadingDialog.setTitle("Custom Loading");
-        loadingDialog.setMessage("Please Wait...");
-        mLoadingHandler = new Handler();
+        wifiListView.setAdapter(arrayAdapter1);
         back=findViewById(R.id.btnBack);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,15 +83,21 @@ public class MainActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
+
         // Check if Bluetooth LE is supported on the device
         if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
             Toast.makeText(this, "Bluetooth LE is not supported on this device", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
+
         // Check if Bluetooth permissions are granted
         checkBluetoothPermissions();
+
+        // Start Wi-Fi search
+        new WifiSearchTask().execute();
     }
+
     private void checkBluetoothPermissions() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT)
@@ -99,6 +118,7 @@ public class MainActivity extends AppCompatActivity {
             initializeBluetooth();
         }
     }
+
     private void initializeBluetooth() {
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (bluetoothAdapter == null) {
@@ -115,25 +135,7 @@ public class MainActivity extends AppCompatActivity {
         // Start BLE scanning
         startBleScan();
     }
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == REQUEST_PERMISSIONS) {
-            boolean permissionsGranted = true;
-            for (int result : grantResults) {
-                if (result != PackageManager.PERMISSION_GRANTED) {
-                    permissionsGranted = false;
-                    break;
-                }
-            }
-            if (grantResults.length>6) {
-                initializeBluetooth();
-            } else {
-                Toast.makeText(this, "Permissions not granted", Toast.LENGTH_SHORT).show();
-                finish();
-            }
-        }
-    }
+
     private void startBleScan() {
         if (bluetoothLeScanner != null) {
             runOnUiThread(new Runnable() {
@@ -183,6 +185,7 @@ public class MainActivity extends AppCompatActivity {
             bluetoothLeScanner.stopScan(scanCallback);
         }
     }
+
     private final ScanCallback scanCallback = new ScanCallback() {
         @Override
         public void onScanResult(int callbackType, @NonNull ScanResult result) {
@@ -193,26 +196,79 @@ public class MainActivity extends AppCompatActivity {
             if (!deviceList.contains(deviceInfo)) {
                 deviceList.add(deviceInfo);
                 arrayAdapter.notifyDataSetChanged();
+                //progressBar.setVisibility(View.VISIBLE);
             }
-            //checkAllDevicesDiscovered();
         }
+
         @Override
         public void onScanFailed(int errorCode) {
             super.onScanFailed(errorCode);
             // Handle scan failure
         }
+
         @Override
         public void onBatchScanResults(List<ScanResult> results) {
             super.onBatchScanResults(results);
             // Handle batch scan results
         }
     };
+
+    private class WifiSearchTask extends AsyncTask<Void, Void, List<android.net.wifi.ScanResult>> {
+
+        @Override
+        protected List<android.net.wifi.ScanResult> doInBackground(Void... voids) {
+            // Perform Wi-Fi search in background
+            wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+            if (wifiManager != null) {
+                wifiManager.startScan();
+                return wifiManager.getScanResults();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(List<android.net.wifi.ScanResult> scanResults) {
+            super.onPostExecute(scanResults);
+            // Update UI with Wi-Fi scan results
+            if (scanResults != null && !scanResults.isEmpty()) {
+                for (android.net.wifi.ScanResult scanResult : scanResults) {
+                    String wifiInfo = scanResult.SSID + "\n" + scanResult.BSSID;
+                    if (!wifiDeviceList.contains(wifiInfo)) {
+                        wifiDeviceList.add(wifiInfo);
+                    }
+                }
+                arrayAdapter1.notifyDataSetChanged();
+                //progressBar.setVisibility(View.VISIBLE);
+            } else {
+                // Handle no Wi-Fi networks found
+            }
+        }
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_PERMISSIONS) {
+            boolean permissionsGranted = true;
+            for (int result : grantResults) {
+                if (result != PackageManager.PERMISSION_GRANTED) {
+                    permissionsGranted = false;
+                    break;
+                }
+            }
+            if (grantResults.length>6) {
+                initializeBluetooth();
+            } else {
+                Toast.makeText(this, "Permissions not granted", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        }
+    }
     private void stopBleScanAndDismissLoading() {
         // Stop BLE scanning
         stopBleScan();
 
         // Dismiss the loading dialog if all devices have been discovered
-        if (allDevicesDiscovered && loadingDialog != null && loadingDialog.isShowing()) {
+        if (loadingDialog != null && loadingDialog.isShowing()) {
             loadingDialog.dismiss();
         }
     }
