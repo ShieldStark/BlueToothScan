@@ -1,0 +1,13 @@
+<scale xmlns:android="http://schemas.android.com/apk/res/android"
+    android:fromXScale="0.5"
+    android:toXScale="1.5"
+    android:fromYScale="0.5"
+    android:toYScale="1.5">
+    <shape xmlns:android="http://schemas.android.com/apk/res/android"
+        android:shape="oval">
+        <solid android:color="#FF0000" /> <!-- Change color as needed -->
+        <size
+            android:width="40dp"
+        android:height="40dp" /> <!-- Change height as needed -->
+    </shape>
+</scale>
