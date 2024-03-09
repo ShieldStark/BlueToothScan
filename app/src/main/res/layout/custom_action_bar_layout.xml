@@ -35,43 +35,100 @@
 
     <androidx.constraintlayout.motion.widget.MotionLayout
         android:id="@+id/motion"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_margin="5dp"
-        app:layoutDescription="@xml/custom_progress_scene2"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        app:layoutDescription="@xml/motion_center_scene"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
+
         <ImageView
             android:id="@+id/imageView1"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:layout_marginStart="4dp"
             android:background="@drawable/oval_shape"
-            app:layout_constraintEnd_toStartOf="@+id/imageView2" />
+            app:layout_constraintBottom_toTopOf="@+id/imageView2"
+            app:layout_constraintEnd_toStartOf="@+id/imageView3"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <ImageView
             android:id="@+id/imageView2"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@drawable/oval_shape"
-            app:layout_constraintTop_toBottomOf="@+id/imageView4" />
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:layout_marginBottom="4dp"
+            android:background="@drawable/oval_shape_blue"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/imageView4"
+            app:layout_constraintStart_toEndOf="@+id/imageView1" />
 
         <ImageView
             android:id="@+id/imageView3"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@drawable/oval_shape"
-            app:layout_constraintBottom_toTopOf="@+id/imageView1" />
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/oval_shape_light_blue"
+            app:layout_constraintBottom_toTopOf="@+id/imageView1"
+            app:layout_constraintEnd_toStartOf="@+id/imageView4"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/imageView4"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@drawable/oval_shape"
-            app:layout_constraintStart_toEndOf="@+id/imageView3" />
-
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:layout_marginEnd="5dp"
+            android:background="@drawable/oval_shape_light_green"
+            app:layout_constraintBottom_toTopOf="@+id/imageView2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView3"
+            app:layout_constraintVertical_bias="0.0" />
 
     </androidx.constraintlayout.motion.widget.MotionLayout>
+
+<!--    <androidx.constraintlayout.motion.widget.MotionLayout-->
+<!--        android:id="@+id/motion"-->
+<!--        android:layout_width="20dp"-->
+<!--        android:layout_height="20dp"-->
+<!--        android:layout_margin="5dp"-->
+<!--        android:layout_marginEnd="4dp"-->
+<!--        android:visibility="visible"-->
+<!--        app:layoutDescription="@xml/custom_progress_scene2"-->
+<!--        app:layout_constraintBottom_toBottomOf="@+id/textTitle"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="@+id/textTitle">-->
+
+<!--        <ImageView-->
+<!--            android:id="@+id/imageView1"-->
+<!--            android:layout_width="7dp"-->
+<!--            android:layout_height="6dp"-->
+<!--            android:background="@drawable/oval_shape"-->
+<!--            app:layout_constraintEnd_toStartOf="@+id/imageView2" />-->
+
+<!--        <ImageView-->
+<!--            android:id="@+id/imageView2"-->
+<!--            android:layout_width="40dp"-->
+<!--            android:layout_height="40dp"-->
+<!--            android:layout_marginTop="8dp"-->
+<!--            android:background="@drawable/oval_shape"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/imageView4"-->
+<!--            tools:layout_editor_absoluteX="20dp" />-->
+
+<!--        <ImageView-->
+<!--            android:id="@+id/imageView3"-->
+<!--            android:layout_width="40dp"-->
+<!--            android:layout_height="40dp"-->
+<!--            android:background="@drawable/oval_shape"-->
+<!--            app:layout_constraintBottom_toTopOf="@+id/imageView1" />-->
+
+<!--        <ImageView-->
+<!--            android:id="@+id/imageView4"-->
+<!--            android:layout_width="40dp"-->
+<!--            android:layout_height="40dp"-->
+<!--            android:background="@drawable/oval_shape"-->
+<!--            app:layout_constraintStart_toEndOf="@+id/imageView3" />-->
+
+
+<!--    </androidx.constraintlayout.motion.widget.MotionLayout>-->
 
     <!--    <ProgressBar-->
 <!--        android:id="@+id/progressBar"-->
