@@ -15,9 +15,14 @@ import java.util.List;
 public class DataAdapter extends RecyclerView.Adapter<DataAdapter.MyViewHolder> {
 
     List<DataValue> list;
+    OnItemClickListener onItemClickListener;
 
     public DataAdapter(List<DataValue> list) {
         this.list = list;
+    }
+
+    public  void setOnItemClickListener(OnItemClickListener listener){
+        this.onItemClickListener=listener;
     }
 
     @NonNull
@@ -43,6 +48,10 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.MyViewHolder> 
         list.addAll(items);
         notifyDataSetChanged();
     }
+    public interface OnItemClickListener {
+        void onItemClick(int position);
+    }
+
 
     @Override
     public int getItemCount() {
@@ -53,7 +62,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.MyViewHolder> 
         TextView time;
         TextView dataType;
         TextView serialNumber;
-        AdapterView.OnItemClickListener listener;
+        OnItemClickListener listener;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -61,11 +70,18 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.MyViewHolder> 
             time=itemView.findViewById(R.id.time);
             dataType=itemView.findViewById(R.id.dataType);
             serialNumber=itemView.findViewById(R.id.serialNumber);
+            itemView.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View view) {
-
+            if (onItemClickListener != null) {
+                int position = getAdapterPosition();
+                if (position != RecyclerView.NO_POSITION) {
+                    onItemClickListener.onItemClick(position);
+                }
+            }
         }
+
     }
 }

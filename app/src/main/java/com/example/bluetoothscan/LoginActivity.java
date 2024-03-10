@@ -157,12 +157,6 @@ public class LoginActivity extends AppCompatActivity {
                             transition.transitionToEnd();
                         }
                         isLooped=!isLooped;
-//                        transition.post(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                transition.transitionToEnd();
-//                            }
-//                        });
                     }
 
                     @Override

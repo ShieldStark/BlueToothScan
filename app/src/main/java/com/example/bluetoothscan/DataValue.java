@@ -1,6 +1,8 @@
 package com.example.bluetoothscan;
 
-public class DataValue {
+import java.io.Serializable;
+
+public class DataValue implements Serializable {
     boolean isSelected;
     String time;
     String dataType;

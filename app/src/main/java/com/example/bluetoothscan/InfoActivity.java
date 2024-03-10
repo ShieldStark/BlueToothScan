@@ -1,5 +1,6 @@
 package com.example.bluetoothscan;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -43,6 +44,16 @@ public class InfoActivity extends AppCompatActivity {
         dataAdapter = new DataAdapter(filteredDataList);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(dataAdapter);
+        dataAdapter.setOnItemClickListener(new DataAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                Log.d(TAG,"on item click called");
+                DataValue selectedData = filteredDataList.get(position);
+                Intent intent = new Intent(InfoActivity.this, RestoreData.class);
+                intent.putExtra("selectedData", selectedData);
+                startActivity(intent);
+            }
+        });
 
         SearchView searchView = findViewById(R.id.searchView);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -103,4 +114,5 @@ public class InfoActivity extends AppCompatActivity {
         //dataAdapter.addAll(filteredDataList);
         dataAdapter.notifyDataSetChanged();
     }
+
 }

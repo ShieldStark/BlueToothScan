@@ -37,7 +37,7 @@ public class DeviceInfoActivity extends AppCompatActivity {
         save=findViewById(R.id.save);
         restore=findViewById(R.id.restore);
         progressBar=findViewById(R.id.progressBar);
-        serialNumber.setText("123");
+        serialNumber.setText("456");
         time.setText(getCurrentTime());
         String data="Hello Guys";
 
@@ -48,7 +48,7 @@ public class DeviceInfoActivity extends AppCompatActivity {
                 JSONObject jsonObject = new JSONObject();
                 try {
                     Log.d(TAG,"TRY Called");
-                    jsonObject.put("serialNumber", "123");
+                    jsonObject.put("serialNumber", "456");
                     jsonObject.put("data", data);
                     jsonObject.put("time", getCurrentTime());
                 } catch (JSONException e) {
@@ -107,7 +107,7 @@ public class DeviceInfoActivity extends AppCompatActivity {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            try (FileOutputStream fos = openFileOutput("saved_data.txt", Context.MODE_PRIVATE)) {
+            try (FileOutputStream fos = openFileOutput("saved_data.txt",Context.MODE_APPEND| Context.MODE_PRIVATE)) {
                 Log.d(TAG, "saveDataToFile TRY Called");
                 fos.write(serializedData.getBytes());
                 fos.write("\n".getBytes());
