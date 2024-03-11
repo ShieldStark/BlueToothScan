@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -50,7 +51,9 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.MyViewHolder> 
     }
     public interface OnItemClickListener {
         void onItemClick(int position);
+        void onDeleteClick(int position);
     }
+
 
 
     @Override
@@ -58,30 +61,43 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.MyViewHolder> 
         return list.size();
     }
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-        CheckBox checkBox;
+        ImageView delete;
         TextView time;
         TextView dataType;
         TextView serialNumber;
         OnItemClickListener listener;
+        public static final int DELETE_BUTTON_ID = 123;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
-            checkBox=itemView.findViewById(R.id.selectCheckBox);
+            delete=itemView.findViewById(R.id.delete);
             time=itemView.findViewById(R.id.time);
-            dataType=itemView.findViewById(R.id.dataType);
+            dataType=itemView.findViewById(R.id.source);
             serialNumber=itemView.findViewById(R.id.serialNumber);
+            delete.setId(DELETE_BUTTON_ID);
+            delete.setOnClickListener(this);
             itemView.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View view) {
-            if (onItemClickListener != null) {
-                int position = getAdapterPosition();
-                if (position != RecyclerView.NO_POSITION) {
-                    onItemClickListener.onItemClick(position);
+            int position = getAdapterPosition();
+            if (position != RecyclerView.NO_POSITION) {
+                switch (view.getId()) {
+                    case DELETE_BUTTON_ID:
+                        if (onItemClickListener != null) {
+                            onItemClickListener.onDeleteClick(position);
+                        }
+                        break;
+                    default:
+                        if (onItemClickListener != null) {
+                            onItemClickListener.onItemClick(position);
+                        }
+                        break;
                 }
             }
         }
+
 
     }
 }

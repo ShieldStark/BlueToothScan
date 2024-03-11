@@ -1,5 +1,6 @@
 package com.example.bluetoothscan;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -19,6 +20,7 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -52,6 +54,12 @@ public class InfoActivity extends AppCompatActivity {
                 Intent intent = new Intent(InfoActivity.this, RestoreData.class);
                 intent.putExtra("selectedData", selectedData);
                 startActivity(intent);
+            }
+
+            @Override
+            public void onDeleteClick(int position) {
+                Log.d(TAG,"on Delete click called");
+                deleteData(filteredDataList.get(position));
             }
         });
 
@@ -113,6 +121,38 @@ public class InfoActivity extends AppCompatActivity {
         //dataAdapter.clear();
         //dataAdapter.addAll(filteredDataList);
         dataAdapter.notifyDataSetChanged();
+    }
+    private void deleteData(DataValue data) {
+        try {
+            FileInputStream fis = openFileInput("saved_data.txt");
+            InputStreamReader inputStreamReader = new InputStreamReader(fis);
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+
+            StringBuilder stringBuilder = new StringBuilder();
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                JSONObject jsonObject = new JSONObject(line);
+                String serialNumber = jsonObject.getString("serialNumber");
+                if (!(serialNumber.equals(data.getSerialNumber())&& data.getTime().equals(jsonObject.getString("time")))) {
+                    stringBuilder.append(line).append("\n");
+                }
+            }
+            fis.close();
+
+            // Write the updated data back to the file
+            FileOutputStream fos = openFileOutput("saved_data.txt", Context.MODE_PRIVATE);
+            fos.write(stringBuilder.toString().getBytes());
+            fos.close();
+
+            // Remove the data from the original and filtered lists
+            originalDataList.remove(data);
+            filteredDataList.remove(data);
+
+            // Notify the adapter of the change
+            dataAdapter.notifyDataSetChanged();
+        } catch (IOException | JSONException e) {
+            e.printStackTrace();
+        }
     }
 
 }

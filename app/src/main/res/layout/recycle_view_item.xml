@@ -1,43 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<TableLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/tableLayout"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cardView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
-    <TableRow>
-        <CheckBox
-            android:id="@+id/selectCheckBox"
-            android:background="@drawable/common_border"
-            android:layout_width="0dp"
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_margin="5dp"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/serialNumberTitle"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
-        <TextView
-            android:id="@+id/time"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:background="@drawable/common_border"
-            android:text="Time"
-            android:textSize="12sp" />
-        <TextView
-            android:id="@+id/dataType"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:background="@drawable/common_border"
-            android:text="Data Type"
-            android:textSize="12sp" />
+            android:layout_margin="5dp"
+            android:text="Serial No.: "
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <TextView
             android:id="@+id/serialNumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:text="XXXX"
+            app:layout_constraintBottom_toBottomOf="@+id/serialNumberTitle"
+            app:layout_constraintStart_toEndOf="@+id/serialNumberTitle"
+            app:layout_constraintTop_toTopOf="@+id/serialNumberTitle" />
+
+        <TextView
+            android:id="@+id/time_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:gravity="end"
+            android:text="Time: "
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@+id/serialNumberTitle"
+            app:layout_constraintTop_toBottomOf="@+id/serialNumberTitle" />
+
+        <TextView
+            android:id="@+id/time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:text="XXXX"
+            app:layout_constraintBottom_toBottomOf="@+id/time_title"
+            app:layout_constraintStart_toEndOf="@+id/time_title"
+            app:layout_constraintTop_toTopOf="@+id/time_title" />
+        <TextView
+            android:id="@+id/sourceTitle"
+            android:text="Source: "
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="@+id/time_title"
+            app:layout_constraintTop_toBottomOf="@+id/time_title"/>
+        <TextView
+            android:id="@+id/source"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/sourceTitle"
+            app:layout_constraintStart_toEndOf="@+id/sourceTitle"
+            app:layout_constraintTop_toTopOf="@+id/sourceTitle"
+            android:text="XXXX"/>
+
+        <ImageButton
+            android:id="@+id/delete"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center"
-            android:background="@drawable/common_border"
-            android:text="Serial Number"
-            android:textSize="12sp" />
-    </TableRow>
-</TableLayout>
+            android:background="@drawable/baseline_delete_24"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>
