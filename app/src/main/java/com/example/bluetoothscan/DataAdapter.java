@@ -1,5 +1,6 @@
 package com.example.bluetoothscan;
 
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,16 +12,28 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class DataAdapter extends RecyclerView.Adapter<DataAdapter.MyViewHolder> {
 
     List<DataValue> list;
     OnItemClickListener onItemClickListener;
+    SparseBooleanArray selectedItems;
+    OnItemLongClickListener onItemLongClickListener;
+
 
     public DataAdapter(List<DataValue> list) {
         this.list = list;
+        selectedItems = new SparseBooleanArray();
     }
+    public DataAdapter(List<DataValue> list, OnItemClickListener onItemClickListener, OnItemLongClickListener onItemLongClickListener) {
+        this.list = list;
+        this.onItemClickListener = onItemClickListener;
+        this.onItemLongClickListener = onItemLongClickListener;
+        selectedItems = new SparseBooleanArray();
+    }
+
 
     public  void setOnItemClickListener(OnItemClickListener listener){
         this.onItemClickListener=listener;
@@ -40,6 +53,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.MyViewHolder> 
         holder.time.setText(list.get(position).getTime());
         holder.dataType.setText(list.get(position).getDataType());
         holder.serialNumber.setText(list.get(position).getSerialNumber());
+        holder.itemView.setActivated(selectedItems.get(position, false));
     }
     public void clear() {
         list.clear();
@@ -53,6 +67,38 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.MyViewHolder> 
         void onItemClick(int position);
         void onDeleteClick(int position);
     }
+    public interface OnItemLongClickListener {
+        void onItemLongClick(int position);
+    }
+    public void toggleSelection(int position) {
+        // Toggle the selection state of the item
+        if (selectedItems.get(position, false)) {
+            selectedItems.delete(position);
+        } else {
+            selectedItems.put(position, true);
+        }
+        notifyItemChanged(position);
+    }
+
+    public void clearSelection() {
+        // Clear all selected items
+        selectedItems.clear();
+        notifyDataSetChanged();
+    }
+
+    public int getSelectedItemCount() {
+        // Return the count of selected items
+        return selectedItems.size();
+    }
+
+    public List<Integer> getSelectedItems() {
+        // Return a list of selected item positions
+        List<Integer> items = new ArrayList<>(selectedItems.size());
+        for (int i = 0; i < selectedItems.size(); i++) {
+            items.add(selectedItems.keyAt(i));
+        }
+        return items;
+    }
 
 
 
@@ -60,7 +106,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.MyViewHolder> 
     public int getItemCount() {
         return list.size();
     }
-    public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener{
         ImageView delete;
         TextView time;
         TextView dataType;
@@ -77,6 +123,31 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.MyViewHolder> 
             delete.setId(DELETE_BUTTON_ID);
             delete.setOnClickListener(this);
             itemView.setOnClickListener(this);
+            itemView.setOnLongClickListener(this);
+        }
+        @Override
+        public boolean onLongClick(View view) {
+            int position = getAdapterPosition();
+            if (position != RecyclerView.NO_POSITION && onItemLongClickListener != null) {
+                // Toggle the selection state of the item
+                toggleSelection(position);
+                return true;
+            }
+            return false;
+        }
+        public void toggleSelection(int position) {
+            // Toggle the selection state of the item
+            if (selectedItems.get(position, false)) {
+                selectedItems.delete(position);
+            } else {
+                selectedItems.put(position, true);
+            }
+            notifyItemChanged(position);
+        }
+
+        public boolean isSelected(int position) {
+            // Check if the item at the given position is selected
+            return selectedItems.get(position, false);
         }
 
         @Override
@@ -97,7 +168,5 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.MyViewHolder> 
                 }
             }
         }
-
-
     }
 }

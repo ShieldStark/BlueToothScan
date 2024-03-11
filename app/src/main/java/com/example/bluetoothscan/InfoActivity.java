@@ -26,7 +26,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-public class InfoActivity extends AppCompatActivity {
+public class InfoActivity extends AppCompatActivity implements DataAdapter.OnItemLongClickListener,DataAdapter.OnItemClickListener {
     String TAG="!@# Info Activity";
 
     RecyclerView recyclerView;
@@ -43,25 +43,10 @@ public class InfoActivity extends AppCompatActivity {
         originalDataList = loadDataFromFile();
         filteredDataList = new ArrayList<>(originalDataList);
 
-        dataAdapter = new DataAdapter(filteredDataList);
+        //dataAdapter = new DataAdapter(filteredDataList);
+        dataAdapter = new DataAdapter(filteredDataList, this, this);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(dataAdapter);
-        dataAdapter.setOnItemClickListener(new DataAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(int position) {
-                Log.d(TAG,"on item click called");
-                DataValue selectedData = filteredDataList.get(position);
-                Intent intent = new Intent(InfoActivity.this, RestoreData.class);
-                intent.putExtra("selectedData", selectedData);
-                startActivity(intent);
-            }
-
-            @Override
-            public void onDeleteClick(int position) {
-                Log.d(TAG,"on Delete click called");
-                deleteData(filteredDataList.get(position));
-            }
-        });
 
         SearchView searchView = findViewById(R.id.searchView);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -155,4 +140,24 @@ public class InfoActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onItemLongClick(int position) {
+        dataAdapter.toggleSelection(position);
+    }
+
+    @Override
+    public void onItemClick(int position) {
+        Log.d(TAG,"on item click called");
+        DataValue selectedData = filteredDataList.get(position);
+        Intent intent = new Intent(InfoActivity.this, RestoreData.class);
+        intent.putExtra("selectedData", selectedData);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onDeleteClick(int position) {
+        Log.d(TAG,"on Delete click called");
+        deleteData(filteredDataList.get(position));
+
+    }
 }
