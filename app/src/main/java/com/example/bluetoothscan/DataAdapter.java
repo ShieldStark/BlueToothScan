@@ -22,6 +22,12 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.MyViewHolder> 
     OnItemClickListener onItemClickListener;
     OnItemLongClickListener onItemLongClickListener;
     List<Integer> selectedItems;
+    private OnSelectionChangedListener onSelectionChangedListener;
+
+    public List<Integer> getSelectedItems() {
+        return selectedItems;
+    }
+
     private int selectedItemIndex = -1;
 
 
@@ -34,6 +40,18 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.MyViewHolder> 
         this.onItemClickListener = onItemClickListener;
         this.onItemLongClickListener = onItemLongClickListener;
         this.selectedItems=new ArrayList<>();
+    }
+    public void updateSelectedItems(List<Integer> selectedItems) {
+        this.selectedItems = selectedItems;
+        notifyDataSetChanged();
+
+        // Notify the activity when selection changes
+        if (onSelectionChangedListener != null) {
+            onSelectionChangedListener.onSelectionChanged(!selectedItems.isEmpty());
+        }
+    }
+    public void setOnSelectionChangedListener(OnSelectionChangedListener listener) {
+        this.onSelectionChangedListener = listener;
     }
 
 
@@ -77,6 +95,14 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.MyViewHolder> 
     public interface OnItemClickListener {
         void onItemClick(int position);
         void onDeleteClick(int position);
+    }
+    public interface OnSelectionChangedListener {
+        void onSelectionChanged(boolean hasSelection);
+    }
+    public void onSelectionChanged(boolean hasSelection) {
+        if (onSelectionChangedListener != null) {
+            onSelectionChangedListener.onSelectionChanged(hasSelection);
+        }
     }
     public interface OnItemLongClickListener {
         void onItemLongClick(int position);
@@ -142,12 +168,19 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.MyViewHolder> 
             return false;
         }
     }
-    private void toggleSelection(int position) {
+    public void toggleSelection(int position) {
         if (selectedItems.contains(position)) {
             selectedItems.remove(Integer.valueOf(position));
         } else {
             selectedItems.add(position);
         }
+        notifyDataSetChanged();
+        if (onSelectionChangedListener != null) {
+            onSelectionChangedListener.onSelectionChanged(!selectedItems.isEmpty());
+        }
+    }
+    public void clearSelectedItems() {
+        selectedItems.clear();
         notifyDataSetChanged();
     }
 }
