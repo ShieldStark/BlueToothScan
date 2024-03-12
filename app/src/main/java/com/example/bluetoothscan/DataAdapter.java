@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -19,25 +20,22 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.MyViewHolder> 
 
     List<DataValue> list;
     OnItemClickListener onItemClickListener;
-    SparseBooleanArray selectedItems;
     OnItemLongClickListener onItemLongClickListener;
+    List<Integer> selectedItems;
+    private int selectedItemIndex = -1;
 
 
     public DataAdapter(List<DataValue> list) {
         this.list = list;
-        selectedItems = new SparseBooleanArray();
+        //selectedItems = new SparseBooleanArray();
     }
     public DataAdapter(List<DataValue> list, OnItemClickListener onItemClickListener, OnItemLongClickListener onItemLongClickListener) {
         this.list = list;
         this.onItemClickListener = onItemClickListener;
         this.onItemLongClickListener = onItemLongClickListener;
-        selectedItems = new SparseBooleanArray();
+        this.selectedItems=new ArrayList<>();
     }
 
-
-    public  void setOnItemClickListener(OnItemClickListener listener){
-        this.onItemClickListener=listener;
-    }
 
     @NonNull
     @Override
@@ -53,15 +51,28 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.MyViewHolder> 
         holder.time.setText(list.get(position).getTime());
         holder.dataType.setText(list.get(position).getDataType());
         holder.serialNumber.setText(list.get(position).getSerialNumber());
-        holder.itemView.setActivated(selectedItems.get(position, false));
-    }
-    public void clear() {
-        list.clear();
-        notifyDataSetChanged();
-    }
-    public void addAll(List<DataValue> items) {
-        list.addAll(items);
-        notifyDataSetChanged();
+        if (selectedItems != null &&selectedItems.contains(position)) {
+            holder.cardView.setCardBackgroundColor(holder.itemView.getContext().getResources().getColor(R.color.selectedItemColor));
+        } else {
+            holder.cardView.setCardBackgroundColor(holder.itemView.getContext().getResources().getColor(android.R.color.transparent));
+        }
+        holder.itemView.setOnLongClickListener(view -> {
+            // Toggle selection on long press
+            toggleSelection(position);
+            return true; // consume the long click
+        });
+
+        holder.itemView.setOnClickListener(view -> {
+            if (selectedItems.isEmpty()) {
+                // Launch other activity if no item is selected
+                if (onItemClickListener != null) {
+                    onItemClickListener.onItemClick(position);
+                }
+            } else {
+                // Toggle selection on click if an item is selected
+                toggleSelection(position);
+            }
+        });
     }
     public interface OnItemClickListener {
         void onItemClick(int position);
@@ -70,48 +81,22 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.MyViewHolder> 
     public interface OnItemLongClickListener {
         void onItemLongClick(int position);
     }
-    public void toggleSelection(int position) {
-        // Toggle the selection state of the item
-        if (selectedItems.get(position, false)) {
-            selectedItems.delete(position);
-        } else {
-            selectedItems.put(position, true);
-        }
-        notifyItemChanged(position);
-    }
-
-    public void clearSelection() {
-        // Clear all selected items
-        selectedItems.clear();
+    public void setSelectedItem(List<Integer> selectedItems) {
+        this.selectedItems=selectedItems;
         notifyDataSetChanged();
     }
-
-    public int getSelectedItemCount() {
-        // Return the count of selected items
-        return selectedItems.size();
-    }
-
-    public List<Integer> getSelectedItems() {
-        // Return a list of selected item positions
-        List<Integer> items = new ArrayList<>(selectedItems.size());
-        for (int i = 0; i < selectedItems.size(); i++) {
-            items.add(selectedItems.keyAt(i));
-        }
-        return items;
-    }
-
-
 
     @Override
     public int getItemCount() {
         return list.size();
     }
-    public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener{
+    public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,View.OnLongClickListener{
         ImageView delete;
         TextView time;
         TextView dataType;
         TextView serialNumber;
         OnItemClickListener listener;
+        CardView cardView;
         public static final int DELETE_BUTTON_ID = 123;
 
         public MyViewHolder(@NonNull View itemView) {
@@ -120,36 +105,12 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.MyViewHolder> 
             time=itemView.findViewById(R.id.time);
             dataType=itemView.findViewById(R.id.source);
             serialNumber=itemView.findViewById(R.id.serialNumber);
+            cardView=itemView.findViewById(R.id.cardView);
             delete.setId(DELETE_BUTTON_ID);
             delete.setOnClickListener(this);
-            itemView.setOnClickListener(this);
-            itemView.setOnLongClickListener(this);
+            cardView.setOnClickListener(this);
+            cardView.setOnLongClickListener(this);
         }
-        @Override
-        public boolean onLongClick(View view) {
-            int position = getAdapterPosition();
-            if (position != RecyclerView.NO_POSITION && onItemLongClickListener != null) {
-                // Toggle the selection state of the item
-                toggleSelection(position);
-                return true;
-            }
-            return false;
-        }
-        public void toggleSelection(int position) {
-            // Toggle the selection state of the item
-            if (selectedItems.get(position, false)) {
-                selectedItems.delete(position);
-            } else {
-                selectedItems.put(position, true);
-            }
-            notifyItemChanged(position);
-        }
-
-        public boolean isSelected(int position) {
-            // Check if the item at the given position is selected
-            return selectedItems.get(position, false);
-        }
-
         @Override
         public void onClick(View view) {
             int position = getAdapterPosition();
@@ -168,5 +129,25 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.MyViewHolder> 
                 }
             }
         }
+
+        @Override
+        public boolean onLongClick(View view) {
+            int position = getAdapterPosition();
+            if (position != RecyclerView.NO_POSITION) {
+                if (onItemLongClickListener != null) {
+                    onItemLongClickListener.onItemLongClick(position);
+                    return true; // consume the long click
+                }
+            }
+            return false;
+        }
+    }
+    private void toggleSelection(int position) {
+        if (selectedItems.contains(position)) {
+            selectedItems.remove(Integer.valueOf(position));
+        } else {
+            selectedItems.add(position);
+        }
+        notifyDataSetChanged();
     }
 }

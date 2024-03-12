@@ -29,10 +29,13 @@ import java.util.List;
 public class InfoActivity extends AppCompatActivity implements DataAdapter.OnItemLongClickListener,DataAdapter.OnItemClickListener {
     String TAG="!@# Info Activity";
 
+
     RecyclerView recyclerView;
     DataAdapter dataAdapter;
     List<DataValue> originalDataList;
     List<DataValue> filteredDataList;
+    private int selectedItemIndex = -1;
+    private List<Integer> selectedItems;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +50,7 @@ public class InfoActivity extends AppCompatActivity implements DataAdapter.OnIte
         dataAdapter = new DataAdapter(filteredDataList, this, this);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(dataAdapter);
+        selectedItems=new ArrayList<>();
 
         SearchView searchView = findViewById(R.id.searchView);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -142,16 +146,31 @@ public class InfoActivity extends AppCompatActivity implements DataAdapter.OnIte
 
     @Override
     public void onItemLongClick(int position) {
-        dataAdapter.toggleSelection(position);
+        Log.d(TAG, "on onItemLongClick called");
+        if (!selectedItems.isEmpty()) {
+            onItemClick(position); // Toggle selection on long click
+        }
     }
 
     @Override
     public void onItemClick(int position) {
-        Log.d(TAG,"on item click called");
-        DataValue selectedData = filteredDataList.get(position);
-        Intent intent = new Intent(InfoActivity.this, RestoreData.class);
-        intent.putExtra("selectedData", selectedData);
-        startActivity(intent);
+        if (!selectedItems.isEmpty()) {
+            Log.d(TAG, "on item click called not empty");
+            if (selectedItems.contains(position)) {
+                // Deselect the item
+                selectedItems.remove(Integer.valueOf(position));
+            } else {
+                // Select the item
+                selectedItems.add(position);
+            }
+            dataAdapter.setSelectedItem(selectedItems);
+        }else {
+            Log.d(TAG, "on item click called");
+            DataValue selectedData = filteredDataList.get(position);
+            Intent intent = new Intent(InfoActivity.this, RestoreData.class);
+            intent.putExtra("selectedData", selectedData);
+            startActivity(intent);
+        }
     }
 
     @Override
