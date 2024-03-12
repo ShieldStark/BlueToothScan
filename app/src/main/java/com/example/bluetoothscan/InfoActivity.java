@@ -94,10 +94,10 @@ public class InfoActivity extends AppCompatActivity implements DataAdapter.OnIte
             Log.d(TAG,"Filter Data Empty query");
             filteredDataList.addAll(originalDataList);
         } else {
-            query = query.toLowerCase().trim();
+            //query = query.toLowerCase().trim();
             Log.d(TAG,"Query: "+query);
             for (DataValue data : originalDataList) {
-                if (data.getSerialNumber().toLowerCase().equalsIgnoreCase(query)) {
+                if (data.getSerialNumber().startsWith(query)) {
                     Log.d(TAG,"Data updated");
                     filteredDataList.add(data);
                 }

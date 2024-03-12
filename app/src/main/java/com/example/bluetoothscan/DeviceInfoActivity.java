@@ -37,7 +37,7 @@ public class DeviceInfoActivity extends AppCompatActivity {
         save=findViewById(R.id.save);
         restore=findViewById(R.id.restore);
         progressBar=findViewById(R.id.progressBar);
-        serialNumber.setText("456");
+        serialNumber.setText("123");
         time.setText(getCurrentTime());
         String data="Hello Guys";
 
@@ -48,7 +48,7 @@ public class DeviceInfoActivity extends AppCompatActivity {
                 JSONObject jsonObject = new JSONObject();
                 try {
                     Log.d(TAG,"TRY Called");
-                    jsonObject.put("serialNumber", "456");
+                    jsonObject.put("serialNumber", "123");
                     jsonObject.put("data", data);
                     jsonObject.put("time", getCurrentTime());
                 } catch (JSONException e) {
