@@ -1,0 +1,10 @@
+<!-- bucket_fill.xml -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Bucket layer -->
+    <item android:drawable="@drawable/bucket_empty"/>
+    <!-- Liquid layer (initially invisible) -->
+    <item android:id="@+id/liquid_layer"
+        android:drawable="@drawable/liquid"
+        android:bottom="0dp"
+        android:top="200dp" />
+</layer-list>

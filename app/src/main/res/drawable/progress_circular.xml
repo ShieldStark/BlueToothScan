@@ -1,0 +1,20 @@
+<!-- progress_circular.xml -->
+<shape
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:innerRadiusRatio="2.5"
+    android:shape="ring"
+    android:thicknessRatio="7"
+    android:useLevel="false">
+
+    <size
+        android:width="100dp"
+        android:height="100dp" />
+
+    <gradient
+        android:centerColor="@android:color/darker_gray"
+        android:centerY="0.5"
+        android:endColor="@android:color/black"
+        android:startColor="@android:color/white"
+        android:type="sweep"
+        android:useLevel="false" />
+</shape>
