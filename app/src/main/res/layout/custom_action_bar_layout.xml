@@ -37,6 +37,7 @@
         android:id="@+id/motion"
         android:layout_width="40dp"
         android:layout_height="40dp"
+        android:visibility="gone"
         app:layoutDescription="@xml/motion_center_scene"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

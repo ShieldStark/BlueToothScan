@@ -1,6 +1,7 @@
 package com.example.bluetoothscan;
 
 import android.Manifest;
+import android.animation.ObjectAnimator;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.le.BluetoothLeScanner;
@@ -16,6 +17,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -24,6 +26,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.motion.widget.MotionLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -51,6 +54,8 @@ public class MainActivity extends AppCompatActivity {
     Button connect;
     WifiManager wifiManager;
     ListView wifiListView;
+    boolean isLooped=false;
+    MotionLayout transition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +88,41 @@ public class MainActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
+        transition = findViewById(R.id.motion);
+        transition.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                // Start animation only when the layout is ready
+                transition.getViewTreeObserver().removeOnGlobalLayoutListener(this); // Remove listener to prevent multiple calls
+                transition.setTransitionListener(new MotionLayout.TransitionListener() {
+                    @Override
+                    public void onTransitionStarted(MotionLayout motionLayout, int startId, int endId) {}
+
+                    @Override
+                    public void onTransitionChange(MotionLayout motionLayout, int startId, int endId, float progress) {}
+
+                    @Override
+                    public void onTransitionCompleted(MotionLayout motionLayout, int currentId) {
+                        // Animation completed, start it again
+                        if (!isLooped){
+                            transition.transitionToStart();
+                        }
+                        else {
+                            transition.transitionToEnd();
+                        }
+                        isLooped=!isLooped;
+                    }
+
+                    @Override
+                    public void onTransitionTrigger(MotionLayout motionLayout, int triggerId, boolean positive, float progress) {}
+                });
+                transition.transitionToEnd();
+            }
+        });
+        ObjectAnimator rotateAnimation = ObjectAnimator.ofFloat(transition, "rotation", 0f, 360f);
+        rotateAnimation.setDuration(1000); // 2 seconds
+        rotateAnimation.setRepeatCount(ObjectAnimator.INFINITE);
+        rotateAnimation.start();
 
         // Check if Bluetooth LE is supported on the device
         if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
@@ -184,6 +224,7 @@ public class MainActivity extends AppCompatActivity {
         if (bluetoothLeScanner != null) {
             bluetoothLeScanner.stopScan(scanCallback);
         }
+        transition.setVisibility(View.GONE);
     }
 
     private final ScanCallback scanCallback = new ScanCallback() {
@@ -195,9 +236,12 @@ public class MainActivity extends AppCompatActivity {
             String deviceInfo = deviceName + "\n" + deviceAddress;
             if (!deviceList.contains(deviceInfo)) {
                 deviceList.add(deviceInfo);
+                //dismissLoadingDialog();
+                //transition.setVisibility(View.VISIBLE);
                 arrayAdapter.notifyDataSetChanged();
                 //progressBar.setVisibility(View.VISIBLE);
             }
+            //transition.setVisibility(View.GONE);
         }
 
         @Override
@@ -235,9 +279,15 @@ public class MainActivity extends AppCompatActivity {
                     String wifiInfo = scanResult.SSID + "\n" + scanResult.BSSID;
                     if (!wifiDeviceList.contains(wifiInfo)) {
                         wifiDeviceList.add(wifiInfo);
+                        transition.setVisibility(View.VISIBLE);
+
                     }
                 }
+                //transition.setVisibility(View.GONE);
+
+                //transition.setVisibility(View.VISIBLE);
                 arrayAdapter1.notifyDataSetChanged();
+                //transition.setVisibility(View.GONE);
                 //progressBar.setVisibility(View.VISIBLE);
             } else {
                 // Handle no Wi-Fi networks found
