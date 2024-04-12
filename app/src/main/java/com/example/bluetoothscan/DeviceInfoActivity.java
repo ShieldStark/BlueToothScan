@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -28,6 +29,13 @@ public class DeviceInfoActivity extends AppCompatActivity {
     Button save,restore;
     ProgressBar progressBar;
     String serializedData;
+    private ProgressBar timerProgressBar;
+    private TextView timerTextView;
+    private CountDownTimer countDownTimer;
+    private final int MAX_PROGRESS = 100;
+    private final int TOTAL_DURATION = 180000; // 3 minutes
+    private final int INTERVAL = 1000; // 9 seconds
+    private final int INCREMENT_AMOUNT = 1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,6 +78,9 @@ public class DeviceInfoActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        timerProgressBar=findViewById(R.id.rectangular_progress_bar);
+        timerTextView=findViewById(R.id.progressText);
+        startTimer();
     }
     private String getCurrentTime() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -123,6 +134,71 @@ public class DeviceInfoActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void result) {
             progressBar.setVisibility(View.GONE);
+        }
+    }
+//    private void startTimer() {
+//        countDownTimer = new CountDownTimer(TOTAL_DURATION, INTERVAL) {
+//            @Override
+//            public void onTick(long millisUntilFinished) {
+//                int currentProgress = timerProgressBar.getProgress();
+//                if (currentProgress < MAX_PROGRESS) {
+//                    int newProgress = currentProgress + INCREMENT_AMOUNT;
+//                    timerProgressBar.setProgress(newProgress);
+//                }
+//                updateTimerText(millisUntilFinished);
+//            }
+//
+//            @Override
+//            public void onFinish() {
+//                timerProgressBar.setProgress(MAX_PROGRESS);
+//                timerTextView.setText("00:00");
+//            }
+//        };
+//        countDownTimer.start();
+//    }
+private void startTimer() {
+    countDownTimer = new CountDownTimer(TOTAL_DURATION, INTERVAL) {
+        @Override
+        public void onTick(long millisUntilFinished) {
+            // Calculate remaining seconds
+            long remainingSeconds = millisUntilFinished / 1000;
+
+            // Update time every second
+            updateTimerText(remainingSeconds * 1000); // Pass milliseconds
+
+            // Update progress every 9 seconds by 5
+            if (remainingSeconds % 9 == 0) {
+                int currentProgress = timerProgressBar.getProgress();
+                int newProgress = currentProgress + 5;
+                if (newProgress <= MAX_PROGRESS) {
+                    timerProgressBar.setProgress(newProgress);
+                }
+            }
+        }
+
+        @Override
+        public void onFinish() {
+            // Ensure progress reaches maximum at the end
+            timerProgressBar.setProgress(MAX_PROGRESS);
+            timerTextView.setText("00:00");
+        }
+    };
+    countDownTimer.start();
+}
+
+
+
+    private void updateTimerText(long millisUntilFinished) {
+        int minutes = (int) (millisUntilFinished / 1000) / 60;
+        int seconds = (int) (millisUntilFinished / 1000) % 60;
+        String timeLeftFormatted = String.format("%02d:%02d", minutes, seconds);
+        timerTextView.setText(timeLeftFormatted);
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
         }
     }
 
